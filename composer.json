@@ -1,0 +1,38 @@
+{
+    "name": "mediabeastnz/omnipay-afterpay",
+    "type": "library",
+    "version": "0.9.0",
+    "description": "AfterPay gateway for Omnipay payment processing library",
+    "keywords": [
+        "after pay",
+        "afterpay",
+        "laybuy",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "gateway"
+    ],
+    "homepage": "https://github.com/mediabeastnz/omnipay-afterpay",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Myles Derham",
+            "email": "myles.derham@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Omnipay\\AfterPay\\" : "src/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "require": {
+        "omnipay/common": "~3.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "~3.0"
+    }
+}

@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+Date: Fri, 19 Aug 2016 06:10:53 GMT
+Content-Type: application/json
+Content-Length: 150
+
+[ {
+  "type" : "PAY_BY_INSTALLMENT",
+  "description" : "Pay over time",
+  "minimumAmount": {
+    "amount": "0.00",
+    "currency": "NZD"
+  },
+  "maximumAmount" : {
+    "amount" : "1000.00",
+    "currency" : "NZD"
+  }
+} ]
