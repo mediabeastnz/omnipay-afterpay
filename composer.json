@@ -30,9 +30,9 @@
         "test": "phpunit"
     },
     "require": {
-        "omnipay/common": "~3.0"
+        "omnipay/common": "~2.0"
     },
     "require-dev": {
-        "omnipay/tests": "~3.0"
-    }
+        "omnipay/tests": "~2.0"
+    },
 }
