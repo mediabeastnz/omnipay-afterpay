@@ -3,14 +3,20 @@
 namespace Omnipay\AfterPay\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
+use Omnipay\Common\Message\RequestInterface;
 
 class Response extends AbstractResponse
 {
 
-    public function getData()
+    /**
+     * Response constructor.
+     *
+     * @param \Omnipay\Common\Message\RequestInterface $request
+     * @param mixed                                    $data
+     */
+    public function __construct(RequestInterface $request, $data)
     {
-        $contents = json_decode($this->data->getBody(),true);
-        return $contents;
+        parent::__construct($request, $data);
     }
 
     /**
@@ -21,11 +27,9 @@ class Response extends AbstractResponse
         if ($this->isRedirect()) {
             return false;
         }
-
-        if (array_key_exists('errorCode', $this->getData())) {
+        if (array_key_exists('errorCode', $this->data)) {
             return false;
         }
-
         return true;
     }
 

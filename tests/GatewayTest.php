@@ -10,7 +10,7 @@ use Omnipay\Tests\GatewayTestCase;
 class GatewayTest extends GatewayTestCase
 {
     /**
-     * @var \Omnipay\PayPal\ExpressGateway
+     * @var \Omnipay\AfterPay\Gateway
      */
     protected $gateway;
 

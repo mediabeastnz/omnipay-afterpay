@@ -78,7 +78,6 @@ class PurchaseRequest extends AbstractRequest
                 'redirectCancelUrl'  => $cancelUrl,
             ),
             'merchantReference' => $this->getTransactionReference(),
-            // TODO: Add shippingAmount & taxAmount getters/setters by extending PurchaseRequest
         );
 
         return $data;

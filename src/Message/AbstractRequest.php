@@ -54,41 +54,26 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     }
 
 
-    public function send()
-    {
-        $data = $this->getData();
-        $authorization = $this->buildAuthorizationHeader();
-        $headers = array_merge(
-            $this->getHeaders(),
-            [
-                'Authorization' => $authorization,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ]
-        );
-        return $this->sendData($data, $headers);
-    }
-
     /**
      * @param mixed $data
      * @return \Omnipay\AfterPay\Message\Response
      * @throws \Guzzle\Http\Exception\RequestException
      */
-    public function sendData($data, array $headers = null)
+    public function sendData($data)
     {
-        try {
-            $httpResponse = $this->httpClient->request(
-                $this->getHttpMethod(),
-                $this->getEndPoint(),
-                $headers,
-                json_encode($data)
-            );
-        } catch (ClientErrorResponseException $e) {
-            $httpResponse = $e->getResponse();
-        }
-
-        return (new Response($this, $httpResponse));
-
+        $endpoint = $this->getEndpoint();
+        $httpMethod = $this->getHttpMethod();
+        $httpRequest = $this->httpClient->createRequest($httpMethod, $endpoint);
+        $httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6); // CURL_SSLVERSION_TLSv1_2
+        $httpRequest->addHeader('Authorization', $this->buildAuthorizationHeader());
+        $httpRequest->addHeader('Content-type', 'application/json');
+        $httpRequest->addHeader('Accept', 'application/json');
+        $httpRequest->setBody(json_encode($data));
+        $httpResponse = $httpRequest->send();
+        $this->response = $this->createResponse(
+            $this->parseResponseData($httpResponse)
+        );
+        return $this->response;
     }
 
     /**

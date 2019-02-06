@@ -9,6 +9,11 @@ class PurchaseResponse extends Response
     protected $liveScript = 'https://www.secure-afterpay.com.au/afterpay.js';
     protected $testScript = 'https://www-sandbox.secure-afterpay.com.au/afterpay.js';
 
+    public function getRedirectMethod()
+    {
+        return 'POST';
+    }
+
     /**
      * @return bool
      */
@@ -22,6 +27,7 @@ class PurchaseResponse extends Response
      */
     public function getRedirectResponse()
     {
+        echo '<pre>'; print_r($this->data); echo '</pre>'; die();
         $output = <<<EOF
 <html>
 <head>
@@ -63,7 +69,7 @@ EOF;
      */
     public function getToken()
     {
-        return isset($this->data['token']) ? $this->data['token'] : null;
+        return isset($this->data->token) ? $this->data->token : null;
     }
 
     /**
