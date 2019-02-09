@@ -12,7 +12,7 @@ class ConfigurationRequest extends AbstractRequest
      */
     public function getData()
     {
-        return null;
+        return array();
     }
 
     /**

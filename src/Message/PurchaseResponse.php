@@ -6,8 +6,7 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class PurchaseResponse extends Response
 {
-    protected $liveScript = 'https://www.secure-afterpay.com.au/afterpay.js';
-    protected $testScript = 'https://www-sandbox.secure-afterpay.com.au/afterpay.js';
+    protected $script = 'https://portal.sandbox.afterpay.com/afterpay.js';
 
     public function getRedirectMethod()
     {
@@ -27,7 +26,6 @@ class PurchaseResponse extends Response
      */
     public function getRedirectResponse()
     {
-        echo '<pre>'; print_r($this->data); echo '</pre>'; die();
         $output = <<<EOF
 <html>
 <head>
@@ -37,7 +35,7 @@ class PurchaseResponse extends Response
 <body>
     <script>
     window.onload = function() {
-        AfterPay.init();
+        AfterPay.init(countryCode: "%s");
         AfterPay.redirect({token: "%s"});
     };
     </script>
@@ -45,7 +43,7 @@ class PurchaseResponse extends Response
 </html>
 EOF;
 
-        $output = sprintf($output, $this->getScriptUrl(), $this->getToken());
+        $output = sprintf($output, $this->getScriptUrl(), $this->getCountryCode(), $this->getToken());
 
         return HttpResponse::create($output);
     }
@@ -55,13 +53,7 @@ EOF;
      */
     public function getScriptUrl()
     {
-        $request = $this->getRequest();
-
-        if ($request instanceof PurchaseRequest && $request->getTestMode()) {
-            return $this->testScript;
-        }
-
-        return $this->liveScript;
+        return $this->script;
     }
 
     /**

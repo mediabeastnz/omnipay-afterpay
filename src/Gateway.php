@@ -6,6 +6,9 @@ use Omnipay\Common\AbstractGateway;
 
 class Gateway extends AbstractGateway
 {
+
+    public $countryCode = 'NZ';
+
     /**
      * @return string
      */
@@ -61,6 +64,23 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * @return mixed
+     */
+    public function getCountryCode()
+    {
+        return $this->getParameter('countryCode');
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setCountryCode($value)
+    {
+        return $this->setParameter('countryCode', $value);
+    }
+
+    /**
      * Configuration Request.
      *
      * Retrieves a list of payment configuration that includes payment types
@@ -96,5 +116,16 @@ class Gateway extends AbstractGateway
     public function completePurchase(array $options = array())
     {
         return $this->createRequest('\Omnipay\AfterPay\Message\CompletePurchaseRequest', $options);
+    }
+
+    /**
+     * Handle partial/full refunds
+     *
+     * @param array $options
+     * @return \Omnipay\Common\Message\ResponseInterface
+     */
+    public function refund(array $options = array())
+    {
+        return $this->createRequest('\Omnipay\AfterPay\Message\RefundRequest', $options);
     }
 }

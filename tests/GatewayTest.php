@@ -67,7 +67,6 @@ class GatewayTest extends GatewayTestCase
     public function testPurchase()
     {
         $request = $this->gateway->purchase(array('amount' => '10.00'));
-
         $this->assertInstanceOf('Omnipay\AfterPay\Message\PurchaseRequest', $request);
         $this->assertSame('10.00', $request->getAmount());
     }
@@ -75,10 +74,17 @@ class GatewayTest extends GatewayTestCase
     public function testPurchaseReturn()
     {
         $request = $this->gateway->completePurchase(array('amount' => '10.00'));
-
         $this->assertInstanceOf('Omnipay\AfterPay\Message\CompletePurchaseRequest', $request);
         $this->assertSame('10.00', $request->getAmount());
     }
 
+    public function testRefund()
+    {
+        $options = array('amount' => '10.00', 'currency' => 'NZD');
+        $request = $this->gateway->refund($options);
 
+        $this->assertInstanceOf('Omnipay\Afterpay\Message\RefundRequest', $request);
+        $this->assertSame('10.00', $request->getAmount());
+        $this->assertSame('NZD', $request->getCurrency());
+    }
 }
