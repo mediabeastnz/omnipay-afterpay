@@ -1,7 +1,7 @@
 {
     "name": "mediabeastnz/omnipay-afterpay",
     "type": "library",
-    "version": "2.1.0",
+    "version": "3.0.0",
     "description": "AfterPay gateway for Omnipay payment processing library",
     "keywords": [
         "after pay",
@@ -30,9 +30,9 @@
         "test": "phpunit"
     },
     "require": {
-        "omnipay/common": "~2.0"
+        "omnipay/common": "^3"
     },
     "require-dev": {
-        "omnipay/tests": "~2.0"
+        "omnipay/tests": "^3"
     }
 }

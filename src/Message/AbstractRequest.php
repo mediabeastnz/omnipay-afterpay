@@ -29,6 +29,42 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /**
      * @return mixed
      */
+    public function getUserAgentPlatform()
+    {
+        return $this->getParameter('userAgentPlatform');
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     * @throws \Omnipay\Common\Exception\RuntimeException
+     */
+    public function setUserAgentPlatform($value)
+    {
+        return $this->setParameter('userAgentPlatform', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserAgentMerchantUrl()
+    {
+        return $this->getParameter('userAgentMerchantUrl');
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     * @throws \Omnipay\Common\Exception\RuntimeException
+     */
+    public function setUserAgentMerchantUrl($value)
+    {
+        return $this->setParameter('userAgentMerchantUrl', $value);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMerchantSecret()
     {
         return $this->getParameter('merchantSecret');
@@ -71,57 +107,18 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function sendData($data)
     {
-        // don't throw exceptions for 4xx errors
-        $this->httpClient->getEventDispatcher()->addListener(
-            'request.error',
-            function ($event) {
-                if ($event['response']->isClientError()) {
-                    $event->stopPropagation();
-                }
-            }
-        );
+        $headers = [
+            'User-Agent' => $this->getUserAgent(),
+            'Authorization' => $this->buildAuthorizationHeader()
+        ];
 
-        // Guzzle HTTP Client createRequest does funny things when a GET request
-        // has attached data, so don't send the data if the method is GET.
         if ($this->getHttpMethod() == 'GET') {
-            $httpRequest = $this->httpClient->createRequest(
-                $this->getHttpMethod(),
-                $this->getEndpoint() . '?' . http_build_query($data),
-                array(
-                    'User-Agent' => $this->getUserAgent(),
-                    'Accept' => 'application/json',
-                    'Authorization' => $this->buildAuthorizationHeader(),
-                    'Content-type' => 'application/json',
-                )
-            );
+            $httpResponse = $this->httpClient->request('GET', $this->getEndpoint() . '?' . http_build_query($data), $headers);
         } else {
-            $httpRequest = $this->httpClient->createRequest(
-                $this->getHttpMethod(),
-                $this->getEndpoint(),
-                array(
-                    'User-Agent' => $this->getUserAgent(),
-                    'Accept' => 'application/json',
-                    'Authorization' => $this->buildAuthorizationHeader(),
-                    'Content-type' => 'application/json',
-                ),
-                $this->toJSON($data)
-            );
+            $httpResponse = $this->httpClient->request('POST', $this->getEndpoint(), $headers, json_encode($data));
         }
 
-        try {
-            $httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6); // CURL_SSLVERSION_TLSv1_2 for libcurl < 7.35
-            $httpResponse = $httpRequest->send();
-            $responseBody = (string) $httpResponse->getBody();
-            $response = json_decode($responseBody, true) ?? [];
-
-            return $this->response = $this->createResponse($response);
-        } catch (\Exception $e) {
-            throw new InvalidResponseException(
-                'Error communicating with payment gateway: ' . $e->getMessage(),
-                $e->getCode()
-            );
-        }
-
+        return $this->createResponse(json_decode((string) $httpResponse->getBody(), true));
     }
 
     public function toJSON($data, $options = 0)
@@ -146,6 +143,20 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     }
 
     protected function getUserAgent() {
-        return 'Omnipay (Omnipay-Afterpay/'.PHP_VERSION.' ; '.$this->getMerchantId().')';
+
+        $subinfo = [];
+
+        // platform
+        if ($platform = $this->getUserAgentPlatform()) {
+            $subinfo[] = $platform;
+        } else {
+            $subinfo[] = 'Omnipay-Afterpay/3.0';
+        }
+
+        // php version
+        $subinfo[] = 'PHP/'.PHP_VERSION;
+        $subinfo[] = 'Merchant/'.$this->getMerchantId();
+
+        return 'Omnipay-Afterpay ('.join('; ', $subinfo).')' . $this->getUserAgentMerchantUrl();
     }
 }

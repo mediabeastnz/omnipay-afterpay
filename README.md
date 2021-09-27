@@ -5,7 +5,7 @@
 [![Latest Stable Version](https://poser.pugx.org/mediabeastnz/omnipay-afterpay/v/stable)](https://packagist.org/packages/mediabeastnz/omnipay-afterpay)
 
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
-processing library for PHP 5.3+. This package implements PayPal support for Omnipay.
+processing library for PHP. This package implements common classes required by Omnipay.
 
 ## Installation
 
@@ -15,7 +15,7 @@ to your `composer.json` file:
 ```json
 {
     "require": {
-        "mediabeastnz/omnipay-afterpay": "~2.1"
+        "mediabeastnz/omnipay-afterpay": "~3.0"
     }
 }
 ```

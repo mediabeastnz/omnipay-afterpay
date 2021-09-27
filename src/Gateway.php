@@ -2,6 +2,7 @@
 
 namespace Omnipay\AfterPay;
 
+use Omnipay\AfterPay\Message\AbstractRequest;
 use Omnipay\Common\AbstractGateway;
 
 class Gateway extends AbstractGateway
@@ -25,6 +26,8 @@ class Gateway extends AbstractGateway
         return array(
             'merchantId'     => '',
             'merchantSecret' => '',
+            'userAgentPlatform' => '',
+            'userAgentMerchantUrl' => '',
             'testMode'       => false,
         );
     }
@@ -62,6 +65,41 @@ class Gateway extends AbstractGateway
     {
         return $this->setParameter('merchantSecret', $value);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUserAgentPlatform()
+    {
+        return $this->getParameter('userAgentPlatform');
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setUserAgentPlatform($value)
+    {
+        return $this->setParameter('userAgentPlatform', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserAgentMerchantUrl()
+    {
+        return $this->getParameter('userAgentMerchantUrl');
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setUserAgentMerchantUrl($value)
+    {
+        return $this->setParameter('userAgentMerchantUrl', $value);
+    }
+
 
     /**
      * @return mixed
