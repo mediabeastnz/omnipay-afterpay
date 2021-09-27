@@ -7,7 +7,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     protected $liveEndpoint = 'https://api.afterpay.com/v1';
     protected $testEndpoint = 'https://api-sandbox.afterpay.com/v1';
 
-
     /**
      * @return mixed
      */
@@ -42,6 +41,24 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setUserAgentPlatform($value)
     {
         return $this->setParameter('userAgentPlatform', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountryCode()
+    {
+        return $this->getParameter('countryCode');
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     * @throws \Omnipay\Common\Exception\RuntimeException
+     */
+    public function setCountryCode($value)
+    {
+        return $this->setParameter('countryCode', $value);
     }
 
     /**
@@ -109,7 +126,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $headers = [
             'User-Agent' => $this->getUserAgent(),
-            'Authorization' => $this->buildAuthorizationHeader()
+            'Authorization' => $this->buildAuthorizationHeader(),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
         ];
 
         if ($this->getHttpMethod() == 'GET') {

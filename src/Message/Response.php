@@ -27,10 +27,32 @@ class Response extends AbstractResponse
         if ($this->isRedirect()) {
             return false;
         }
-        if (array_key_exists('errorCode', $this->data)) {
+
+        if ($this->isResponseHasError()) {
             return false;
         }
+
         return true;
     }
 
+    protected function isResponseHasError()
+    {
+        return array_key_exists('errorCode', $this->data);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getToken()
+    {
+        return isset($this->data['token']) ? $this->data['token'] : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionReference()
+    {
+        return $this->getToken();
+    }
 }

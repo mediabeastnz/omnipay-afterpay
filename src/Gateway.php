@@ -28,6 +28,7 @@ class Gateway extends AbstractGateway
             'merchantSecret' => '',
             'userAgentPlatform' => '',
             'userAgentMerchantUrl' => '',
+            'countryCode' => '',
             'testMode'       => false,
         );
     }

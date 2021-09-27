@@ -71,14 +71,17 @@ class PurchaseRequest extends AbstractRequest
                 'countryCode' => $card->getShippingCountry(),
                 'phoneNumber' => $card->getShippingPhone(),
             ),
-            'items'           => $this->getItemData(),
             'merchant'        => array(
                 // Need to append dummy parameter otherwise AfterPay breaks the hash param on return
                 'redirectConfirmUrl' => $returnUrl,
                 'redirectCancelUrl'  => $cancelUrl,
             ),
-            'merchantReference' => $this->getTransactionReference(),
+            'merchantReference' => $this->getTransactionId(),
         );
+
+        if ($items = $this->getItemData()) {
+            $data['items'] = $items;
+        }
 
         return $data;
     }

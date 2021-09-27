@@ -18,6 +18,11 @@ class PurchaseResponse extends Response
      */
     public function isRedirect()
     {
+        if ($this->isResponseHasError())
+        {
+            return false;
+        }
+
         return true;
     }
 
@@ -35,17 +40,16 @@ class PurchaseResponse extends Response
 <body>
     <script>
     window.onload = function() {
-        AfterPay.init(countryCode: "%s");
+        AfterPay.init({countryCode: "%s"});
         AfterPay.redirect({token: "%s"});
     };
     </script>
 </body>
 </html>
 EOF;
+        $output = sprintf($output, $this->getScriptUrl(), $this->request->getCountryCode(), $this->getToken());
 
-        $output = sprintf($output, $this->getScriptUrl(), $this->getCountryCode(), $this->getToken());
-
-        return HttpResponse::create($output);
+        return new HttpResponse($output);
     }
 
     /**
@@ -56,19 +60,4 @@ EOF;
         return $this->script;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getToken()
-    {
-        return isset($this->data->token) ? $this->data->token : null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTransactionReference()
-    {
-        return $this->getToken();
-    }
 }
