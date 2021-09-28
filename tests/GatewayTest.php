@@ -14,20 +14,12 @@ class GatewayTest extends GatewayTestCase
      */
     protected $gateway;
 
-    /**
-     * @var array
-     */
-    protected $options;
-
 
     public function setUp()
     {
         parent::setUp();
 
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
-        $this->options = array(
-            'testMode' => true
-        );
 
     }
 
