@@ -148,11 +148,12 @@ class PurchaseRequest extends AbstractRequest
 
     /**
      * @param mixed $data
+     * @param int $statusCode
      * @return \Omnipay\AfterPay\Message\Response
      */
-    protected function createResponse($data)
+    protected function createResponse($data, $statusCode)
     {
-        return new PurchaseResponse($this, $data);
+        return new PurchaseResponse($this, $data, $statusCode);
     }
 
     /**

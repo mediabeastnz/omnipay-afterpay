@@ -134,10 +134,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         if ($this->getHttpMethod() == 'GET') {
             $httpResponse = $this->httpClient->request('GET', $this->getEndpoint() . '?' . http_build_query($data), $headers);
         } else {
-            $httpResponse = $this->httpClient->request('POST', $this->getEndpoint(), $headers, json_encode($data));
+            $httpResponse = $this->httpClient->request('POST',  $this->getEndpoint(), $headers, json_encode($data));
         }
 
-        return $this->createResponse(json_decode((string) $httpResponse->getBody(), true));
+        return $this->createResponse(json_decode((string) $httpResponse->getBody(), true), $httpResponse->getStatusCode());
     }
 
     public function toJSON($data, $options = 0)
@@ -148,9 +148,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return str_replace('\\/', '/', json_encode($data, $options));
     }
 
-    protected function createResponse($data)
+    protected function createResponse($data, $status_code)
     {
-        return $this->response = new Response($this, $data);
+        return $this->response = new Response($this, $data, $status_code);
     }
 
     protected function buildAuthorizationHeader()

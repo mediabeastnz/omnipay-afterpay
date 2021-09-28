@@ -9,14 +9,20 @@ class Response extends AbstractResponse
 {
 
     /**
+     * @var int
+     */
+    protected $statusCode;
+
+    /**
      * Response constructor.
      *
      * @param \Omnipay\Common\Message\RequestInterface $request
      * @param mixed                                    $data
      */
-    public function __construct(RequestInterface $request, $data)
+    public function __construct(RequestInterface $request, $data, $statusCode)
     {
         parent::__construct($request, $data);
+        $this->statusCode = $statusCode;
     }
 
     /**
@@ -37,7 +43,30 @@ class Response extends AbstractResponse
 
     protected function isResponseHasError()
     {
-        return array_key_exists('errorCode', $this->data);
+        return array_key_exists('errorCode', $this->data) || !$this->isStatusCodeValid();
+    }
+
+    protected function isStatusCodeValid()
+    {
+        return $this->getStatusCode() < 400;
+    }
+
+    public function getMessage()
+    {
+        if (isset($this->data['message'])) {
+            return $this->data['message'];
+        }
+
+        if (!$this->isStatusCodeValid()) {
+            return 'Afterpay returned an invalid status code. Please try again.';
+        }
+
+        return null;
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 
     /**
